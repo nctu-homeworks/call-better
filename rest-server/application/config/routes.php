@@ -52,3 +52,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+//$route['friend/current'] = 'friend/current';
+//$route['friend/inviting'] = 'friend/inviting';
+//$route['friend/invited'] = 'friend/invited';
+$route['friend/(:any)']['delete'] = 'friend/index/$1';
