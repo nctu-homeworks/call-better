@@ -13,6 +13,12 @@ class Session_model extends CI_Model
 		return $result ? $key : FALSE;
     }
 
+	public function login_session($session_id, $user_id) {
+		$this->db->update('session', array(
+			'user_id' => $user_id
+		), array('id' => $session_id));
+	}
+
 	private function _generate_key() {
 		$this->load->helper('security');
 
