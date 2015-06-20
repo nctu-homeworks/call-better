@@ -36,4 +36,28 @@ class Account_model extends CI_Model
 		$user_data['id'] = $this->db->insert_id();
 		return $user_data;
 	}
+
+	public function get_info($user_id) {
+		return $this->db
+			->select('id, name, birthday, sex, email')
+			->get_where('user', array('id' => $user_id), 1)
+			->row();
+	}
+
+	public function modify_info($user_id, $old_pwd, $modify) {
+		$user = $this->db
+			->select('password')
+			->get_where('user', array('id' => $user_id), 1)->row();
+		if (!password_verify($old_pwd, $user->password))
+			return FALSE;
+
+		if (isset($modify['password']))
+			$modify['password'] = password_hash($modify['password'], PASSWORD_DEFAULT);
+
+		$this->db->update('user',
+			array_intersect_key($modify, array_flip(array('name', 'password'))),
+			array('id' => $user_id)
+		);
+		return $this->get_info($user_id);
+	}
 }
