@@ -57,3 +57,4 @@ $route['translate_uri_dashes'] = FALSE;
 //$route['friend/inviting'] = 'friend/inviting';
 //$route['friend/invited'] = 'friend/invited';
 $route['friend/(:any)']['delete'] = 'friend/index/$1';
+$route['post/(:any)']['delete'] = 'post/index/$1';
