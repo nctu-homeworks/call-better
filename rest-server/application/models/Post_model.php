@@ -17,9 +17,9 @@ class Post_model extends CI_Model
 				user.name as creator,
 				post.creater as creator_id,
 				post.content,
-				count(A.id) as like_count,
-				count(response.id) as response_count,
-				count(B.id) > 0 as is_like,
+				count(DISTINCT A.id) as like_count,
+				count(DISTINCT response.id) as response_count,
+				count(DISTINCT B.id) > 0 as is_like,
 				post.time
 			')->from('post')
 			->join('user', 'post.creater = user.id')
@@ -41,7 +41,7 @@ class Post_model extends CI_Model
 				post.creater as creator_id,
 				post.content,
 				post.time,
-				count(L.id) > 0 as is_like
+				count(DISTINCT L.id) > 0 as is_like
 			')->from('post')
 			->join('user', 'post.creater = user.id')
 			->join('like as L', 'post.id = L.post and L.user = '.$user_id, 'left')
@@ -177,9 +177,9 @@ class Post_model extends CI_Model
 				user.name as creator,
 				post.creater as creator_id,
 				post.content,
-				count(A.id) as like_count,
-				count(response.id) as response_count,
-				count(B.id) > 0 as is_like,
+				count(DISTINCT A.id) as like_count,
+				count(DISTINCT response.id) as response_count,
+				count(DISTINCT B.id) > 0 as is_like,
 				post.time
 			')->from('post')
 			->join('user', 'post.creater = user.id')
@@ -228,7 +228,7 @@ class Post_model extends CI_Model
 				A.id,
 				user.name as creator,
 				A.user as creator_id,
-				count(B.id) as like_count,
+				count(DISTINCT B.id) as like_count,
 				1 as is_like
 			')->from('like as A')
 			->join('user', 'A.user = user.id')
@@ -261,9 +261,9 @@ class Post_model extends CI_Model
 				user.name as creator,
 				post.creater as creator_id,
 				post.content,
-				count(L_A.id) as like_count,
-				count(response.id) as response_count,
-				count(L_B.id) > 0 as is_like,
+				count(DISTINCT L_A.id) as like_count,
+				count(DISTINCT response.id) as response_count,
+				count(DISTINCT L_B.id) > 0 as is_like,
 				post.time
 			')->from('post')
 			->join('user', 'post.creater = user.id')
