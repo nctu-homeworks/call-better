@@ -17,12 +17,14 @@ class Post_model extends CI_Model
 				user.name as creator,
 				post.creater as creator_id,
 				post.content,
-				count(`like`.id) as like_count,
+				count(A.id) as like_count,
 				count(response.id) as response_count,
+				count(B.id) > 0 as is_like,
 				post.time
 			')->from('post')
 			->join('user', 'post.creater = user.id')
-			->join('like', 'post.id = like.post', 'left')
+			->join('like as A', 'post.id = A.post', 'left')
+			->join('like as B', 'post.id = B.post and B.user = '.$self_id, 'left')
 			->join('response', 'post.id = response.post', 'left')
 			->where('post.creater', $user_id)
 			->group_by('post.id')
@@ -38,10 +40,13 @@ class Post_model extends CI_Model
 				user.name as creator,
 				post.creater as creator_id,
 				post.content,
-				post.time
+				post.time,
+				count(L.id) > 0 as is_like
 			')->from('post')
 			->join('user', 'post.creater = user.id')
+			->join('like as L', 'post.id = L.post and L.user = '.$user_id, 'left')
 			->where('post.id', $post_id)
+			->group_by('post.id')
 			->limit(1)
 			->get();
 		if ($qry->num_rows() != 1)
@@ -172,15 +177,18 @@ class Post_model extends CI_Model
 				user.name as creator,
 				post.creater as creator_id,
 				post.content,
-				count(`like`.id) as like_count,
+				count(A.id) as like_count,
 				count(response.id) as response_count,
+				count(B.id) > 0 as is_like,
 				post.time
 			')->from('post')
 			->join('user', 'post.creater = user.id')
-			->join('like', 'post.id = like.post', 'left')
+			->join('like as A', 'post.id = A.post', 'left')
+			->join('like as B', 'post.id = B.post and B.user = '.$user_id, 'left')
 			->join('response', 'post.id = response.post', 'left')
 			->where('post.id', $post_id)
 			->group_by('post.id')
+			->order_by('post.time', 'DESC')
 			->get()->row();
 
 		$response->post = $post;
@@ -220,7 +228,8 @@ class Post_model extends CI_Model
 				A.id,
 				user.name as creator,
 				A.user as creator_id,
-				count(B.id) as like_count
+				count(B.id) as like_count,
+				1 as is_like
 			')->from('like as A')
 			->join('user', 'A.user = user.id')
 			->join('like as B', 'A.post = B.post')
@@ -252,12 +261,14 @@ class Post_model extends CI_Model
 				user.name as creator,
 				post.creater as creator_id,
 				post.content,
-				count(`like`.id) as like_count,
+				count(L_A.id) as like_count,
 				count(response.id) as response_count,
+				count(L_B.id) > 0 as is_like,
 				post.time
 			')->from('post')
 			->join('user', 'post.creater = user.id')
-			->join('like', 'post.id = like.post', 'left')
+			->join('like as L_A', 'post.id = L_A.post', 'left')
+			->join('like as L_B', 'post.id = L_B.post and L_B.user = '.$user_id, 'left')
 			->join('response', 'post.id = response.post', 'left')
 			->join('friendship as F_A', 'post.creater = F_A.user1', 'left')
 			->join('friendship as F_B', 'post.creater = F_B.user2', 'left')
