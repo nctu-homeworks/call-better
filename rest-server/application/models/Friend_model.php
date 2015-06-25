@@ -4,7 +4,7 @@ class Friend_model extends CI_Model
 {
 	public function find_users($name) {
 		return $this->db
-			->select('id, name, sex, email')
+			->select('id as user_id, name, sex, email')
 			->like('name', $name)
 			->get('user')
 			->result();
